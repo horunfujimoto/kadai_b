@@ -32,6 +32,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def search
+    @user = User.find(params[:user_id])
+    @books = @user.books
+    @book = Book.new
+    if params[:created_at] == "" #入力欄が空欄なら、「日付を選択してください」と表示
+      @search_book = "日付を選択してください"
+    else
+      create_at = params[:created_at] #入力された日付を「create_at」に代入
+      @search_book = @books.where(['created_at LIKE ? ', "#{create_at}%"]).count
+      #@userの持つ全Bookデータのうち、created_at が 入力された create_at と同じ年月日のものを取得し、数を数え、@search_book に代入
+    end
+  end
+
   private
 
   def user_params
